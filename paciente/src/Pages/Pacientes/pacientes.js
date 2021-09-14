@@ -57,7 +57,7 @@ export default function Paciente() {
                                 variant="outlined"
                                 />
                         </div>
-                    <div className="table" style={{height:400}}>
+                    <div className="table"  >
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
