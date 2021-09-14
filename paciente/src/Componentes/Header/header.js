@@ -11,8 +11,8 @@ import {
     MenuItem
 } from '@material-ui/core';
 
-import MenuIcon from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import LocalConvenienceStore from '@material-ui/icons/LocalConvenienceStore';
 
 export default function Header() {
     const classes = styles();
@@ -21,19 +21,20 @@ export default function Header() {
 
     const handleClose = () => {
         setAnchorEl(null);
-      };
-      
-      const handleMenu = (event) => {
+    };
+
+    const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
-      };
+    };
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge='start' className={classes.menuButton} color="inherit" aria-label='menu'>
-                        <MenuIcon />
+                        <LocalConvenienceStore style={{fontSize:40}}/>
                     </IconButton>
+
                     <Typography variant='h6' className={classes.title}>
                         Pharma Inc
                     </Typography>

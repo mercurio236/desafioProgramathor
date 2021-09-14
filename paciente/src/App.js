@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 
-import Store from './Sotore';
+import Store from './Store';
 import Routers from './routers';
 import Header from './Componentes/Header/header';
 

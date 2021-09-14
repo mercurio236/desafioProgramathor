@@ -1,14 +1,14 @@
 import React from "react";
-import {makeStyles} from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 const styles = makeStyles((theme) => ({
-    root:{
+    root: {
         flexGrow: 1
     },
     menuButton: {
         marginRight: theme.spacing(2),
-      },
-    title:{
+    },
+    title: {
         flexGrow: 1
     }
 }))
