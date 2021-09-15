@@ -9908,6 +9908,11 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
+redeux@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/redeux/-/redeux-5.1.0.tgz#5da0a91f96304565fea20734244dc60332c7e929"
+  integrity sha512-p/EUgw8hZPAxaZ/LVe8Kf/THK4tDpZxcvrM9QWxa1aKLyeSg+FpXTDhmlCyy2qwC4C41sQAOaLohcxxZ90aESA==
+
 redux@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.1.tgz#76f1c439bb42043f985fbd9bf21990e60bd67f47"

@@ -1,9 +1,9 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 
-import Paciente from './Pages/Pacientes/pacientes';
+import PacientesReducer from './Pages/Pacientes/Redux/PacienteReducer';
 
 const Reducer = combineReducers({
-    pacienteState: Paciente
+    pacientesState: PacientesReducer
 })
 
 export default createStore(Reducer)

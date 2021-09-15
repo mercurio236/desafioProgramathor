@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 
-import Store from './Store';
+import store from './Store';
 import Routers from './routers';
 import Header from './Componentes/Header/header';
 
@@ -11,7 +11,7 @@ import Header from './Componentes/Header/header';
 
 export default function App() {
   return (
-    <Provider store={Store}>
+    <Provider store={store}>
       <BrowserRouter>
         <Header />
         <Routers />
