@@ -14,24 +14,48 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle
+    DialogTitle,
+    Button,
+    Avatar
 } from '@material-ui/core';
 import './styles.css'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
+
+const useMakeStyles = makeStyles ((theme) => ({
+    imgUser:{
+        width: theme.spacing(10),
+        height: theme.spacing(10)
+    }
+}))
 
 export default function Paciente() {
     const [clientes, setClientes] = useState([])
+    const [openDialog, setDialogOpen] = useState(false);
+    const [userSelected, setUserSelected] = useState([])
+    const classes = useMakeStyles()
     console.log(clientes)
     const pacientes = useSelector((state) => state.pacientesState.pacientes)
+
 
     useEffect(() => {
         setClientes(pacientes.results)
 
-    }, [clientes, pacientes])
+    }, [clientes, pacientes, userSelected])
 
+    function handleDialogOpen(cliente) {
+        setDialogOpen(true)
+        let data = {
+            imagemUser: cliente.picture.large,
+            nome: cliente.name.first
+        }
+        setUserSelected(data)
+        console.log(data)
+    }
 
-
-
+    function handleDialogClose() {
+        setDialogOpen(false)
+    }
 
 
     return (
@@ -59,7 +83,7 @@ export default function Paciente() {
                                 <TableBody>
                                     {clientes &&
                                         clientes.map((cliente) => (
-                                            <TableRow onClick={() => alert(cliente.name.first)} key={cliente.id}>
+                                            <TableRow onClick={() => handleDialogOpen(cliente)} key={cliente.index}>
                                                 <TableCell>{`${cliente.name.first} ${cliente.name.last}`}</TableCell>
                                                 <TableCell>{cliente.gender}</TableCell>
                                                 <TableCell>{cliente.dob.date}</TableCell>
@@ -70,9 +94,28 @@ export default function Paciente() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <Dialog
+                            open={openDialog}
+                            onClose={handleDialogClose}
+
+                        >
+                            <DialogTitle id="alert-dialog-title">Infomações do Usuário</DialogTitle>
+                            <DialogContent>
+                                <Avatar alt="Remy Sharp" src={userSelected.imagemUser} className={classes.imgUser} />
+                                <DialogContentText >
+                                    Nome: {userSelected.nome}
+
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleDialogClose} variant="outline">Ok</Button>
+                            </DialogActions>
+                        </Dialog>
                     </div>
                 </Grid>
             </Grid>
+
+
         </Container>
     )
 }
