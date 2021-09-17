@@ -22,30 +22,31 @@ const useMakeStyles = makeStyles((theme) => ({
     input: {
         width: '50%'
     },
-    location:{
-        flexDirection:'column',
-        display:'flex',
+    location: {
+        flexDirection: 'column',
+        display: 'flex',
         marginLeft: 5
     },
-    avatar:{
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center',
+    avatar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 10
     },
-    title:{
-        textAlign:'center'
+    title: {
+        textAlign: 'center'
     },
-    table:{
+    tabela: {
         overflowX: 'hidden',
-        height:'70%',
-        width: '100%',
-        position:'fixed',
-        borderRadius: 10
+        height: '70%',
+        width: '96%',
+        position: 'fixed',
+        borderRadius: 10,
         
     },
-    tableBody:{
-        cursor:'pointer'
+
+    tableBody: {
+        cursor: 'pointer',
     }
 }))
 

@@ -18,7 +18,8 @@ import {
     Button,
     Avatar,
     Typography,
-    Divider
+    Divider,
+
 } from '@material-ui/core';
 import { useSelector } from 'react-redux'
 import useMakeStyles from "./styles";
@@ -27,16 +28,31 @@ import useMakeStyles from "./styles";
 export default function Paciente() {
     const [clientes, setClientes] = useState([])
     const [openDialog, setDialogOpen] = useState(false);
-    const [userSelected, setUserSelected] = useState([])
+    const [userSelected, setUserSelected] = useState([]);
+    const [search, setSearch] = useState('');
+    const [filterSearch, setFilterSearch] = useState([])
     const classes = useMakeStyles()
-    console.log(clientes)
     const pacientes = useSelector((state) => state.pacientesState.pacientes)
+
+    let row = ['Name', 'Gender', 'Birth', 'Actions']
 
 
     useEffect(() => {
         setClientes(pacientes.results)
+        clientes && (
+            setFilterSearch(
+                clientes.filter(cliente => {
+                    console.log(clientes)
+                    console.log(search)
+                    return cliente.name.first.toLowerCase().includes(search.toLowerCase())
+                }
+                )
+            )
+        )
 
-    }, [clientes, pacientes, userSelected])
+    }, [clientes, pacientes, userSelected, search])
+
+
 
     function handleDialogOpen(cliente) {
         setDialogOpen(true)
@@ -66,6 +82,8 @@ export default function Paciente() {
     }
 
 
+
+
     return (
         <Container fluid>
             <Grid container spacing={3}>
@@ -75,22 +93,28 @@ export default function Paciente() {
                             className={classes.input}
                             placeholder="Pesquisa"
                             variant="outlined"
+                            onChange={e => setSearch(e.target.value)}
+                            value={search}
+                            type="search"
+
                         />
                     </div>
-                    <div className={classes.table}>
-                        <TableContainer component={Paper} >
-                            <Table>
-                                <TableHead>
+                    <div>
+                        <TableContainer className={classes.tabela} component={Paper} >
+                            <Table >
+                                <TableHead >
                                     <TableRow>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell>Gender</TableCell>
-                                        <TableCell>Birth</TableCell>
-                                        <TableCell>Actions</TableCell>
+                                        {
+                                            row.map(m => (
+                                                <TableCell>{m}</TableCell>
+                                            ))
+                                        }
+
                                     </TableRow>
                                 </TableHead>
                                 <TableBody className={classes.tableBody}>
                                     {clientes &&
-                                        clientes.map((cliente) => (
+                                        filterSearch.map((cliente) => (
                                             <TableRow onClick={() => handleDialogOpen(cliente)} key={cliente.index}>
                                                 <TableCell>{`${cliente.name.first} ${cliente.name.last}`}</TableCell>
                                                 <TableCell>{cliente.gender === 'female' ? 'femenino' : 'masculino'}</TableCell>

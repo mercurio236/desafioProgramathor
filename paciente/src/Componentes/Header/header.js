@@ -30,7 +30,7 @@ export default function Header() {
     };
 
     async function reqPacientes(){
-        await api.get('/api/?results=40')
+        await api.get('/api/?results=50')
         .then((res) => {
             dispatch(pacientes(res.data))
         })
