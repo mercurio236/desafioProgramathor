@@ -19,10 +19,13 @@ import {
     Avatar,
     Typography,
     Divider,
+    CircularProgress,
+    Fade
 
 } from '@material-ui/core';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import useMakeStyles from "./styles";
+import { reqPacientes } from '../../Componentes/Header/header'
 
 
 export default function Paciente() {
@@ -32,18 +35,26 @@ export default function Paciente() {
     const [search, setSearch] = useState('');
     const [filterSearch, setFilterSearch] = useState([])
     const classes = useMakeStyles()
+    const [load, setLoad] = useState(false);
+    const [query, setQuery] = useState('idle')
     const pacientes = useSelector((state) => state.pacientesState.pacientes)
+    const timeRef = React.useRef()
+    const dispatch = useDispatch()
+
 
     let row = ['Name', 'Gender', 'Birth', 'Actions']
+
+    useEffect(() => {
+        handleClickQuery(dispatch)
+    }, [])
 
 
     useEffect(() => {
         setClientes(pacientes.results)
+
         clientes && (
             setFilterSearch(
                 clientes.filter(cliente => {
-                    console.log(clientes)
-                    console.log(search)
                     return cliente.name.first.toLowerCase().includes(search.toLowerCase())
                 }
                 )
@@ -52,6 +63,18 @@ export default function Paciente() {
 
     }, [clientes, pacientes, userSelected, search])
 
+    function handleClickQuery() {
+        setQuery('progress');
+        reqPacientes(dispatch)
+
+        if (timeRef.current) {
+            clearTimeout(timeRef.current)
+        }
+
+        timeRef.current = window.setTimeout(() => {
+            setQuery('success')
+        }, 2000)
+    }
 
 
     function handleDialogOpen(cliente) {
@@ -74,7 +97,7 @@ export default function Paciente() {
             ruaNumero: cliente.location.street.number,
         }
         setUserSelected(data)
-        console.log(data)
+     
     }
 
     function handleDialogClose() {
@@ -86,27 +109,28 @@ export default function Paciente() {
 
     return (
         <Container fluid>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <div className={classes.container}>
-                        <TextField
-                            className={classes.input}
-                            placeholder="Pesquisa"
-                            variant="outlined"
-                            onChange={e => setSearch(e.target.value)}
-                            value={search}
-                            type="search"
+            <div className={classes.container}>
+                <TextField
+                    className={classes.input}
+                    placeholder="Pesquisa"
+                    variant="outlined"
+                    onChange={e => setSearch(e.target.value)}
+                    value={search}
+                    type="search"
 
-                        />
-                    </div>
-                    <div>
+                />
+            </div>
+
+            <div>
+                {
+                    query === 'success' ? (
                         <TableContainer className={classes.tabela} component={Paper} >
                             <Table >
                                 <TableHead >
                                     <TableRow>
                                         {
                                             row.map(m => (
-                                                <TableCell>{m}</TableCell>
+                                                <TableCell className={classes.tableRow}>{m}</TableCell>
                                             ))
                                         }
 
@@ -126,49 +150,66 @@ export default function Paciente() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        <Dialog
-                            open={openDialog}
-                            onClose={handleDialogClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                        >
-                            <DialogTitle className={classes.title} id="alert-dialog-title">Infomações do Usuário</DialogTitle>
-                            <DialogContent>
-                                <div className={classes.avatar}>
-                                    <Avatar alt="Remy Sharp" src={userSelected.imagemUser} className={classes.imgUser} />
-                                </div>
-                                <DialogContentText className={classes.textInfoUser} >
-                                    <Typography>Nome: {`${userSelected.nome} ${userSelected.sobrenome}`}</Typography>
-                                    <Divider />
-                                    <Typography>E-mail: {userSelected.email} </Typography>
-                                    <Divider />
-                                    <Typography>Gênero: {userSelected.genero === 'female' ? 'feminino' : 'masculino'}</Typography>
-                                    <Divider />
-                                    <Typography>Nascimento: {userSelected.nascimento}</Typography>
-                                    <Divider />
-                                    <Typography>Telefone: {userSelected.telefone}</Typography>
-                                    <Divider />
-                                    <Typography>Nacionalidade: {userSelected.nascionalidade}</Typography>
-                                    <Divider />
-                                    <Typography>Endereço: </Typography>
-                                    <div className={classes.location}>
-                                        <Typography>{`Cidade: ${userSelected.cidade} Codigo Postal: ${userSelected.codigoPostal}`}</Typography>
-                                        <Typography>{`País: ${userSelected.pais} Estado: ${userSelected.estado}`}</Typography>
-                                        <Typography>{`Rua: ${userSelected.ruaNome} Numero: ${userSelected.ruaNumero}`}</Typography>
-                                    </div>
-                                    <Divider />
-                                    <Typography>ID: {userSelected.id}</Typography>
-                                    <Divider />
-                                    <Typography>URL: { }</Typography>
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={handleDialogClose} variant="outline">Ok</Button>
-                            </DialogActions>
-                        </Dialog>
-                    </div>
-                </Grid>
-            </Grid>
+                    ) : (
+                        <div className={classes.containerLoad}>
+                            <Fade
+                                in={query === 'progress'}
+                                style={{
+                                    transitionDelay: query === 'progress' ? '800ms' : '0ms'
+
+                                }}
+
+                            >
+                                <CircularProgress />
+                            </Fade>
+                        </div>
+                    )
+                }
+
+                <Dialog
+                    open={openDialog}
+                    onClose={handleDialogClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle className={classes.title} id="alert-dialog-title">Infomações do Usuário</DialogTitle>
+                    <DialogContent>
+                        <div className={classes.avatar}>
+                            <Avatar alt="Remy Sharp" src={userSelected.imagemUser} className={classes.imgUser} />
+                        </div>
+                        <DialogContentText className={classes.textInfoUser} >
+                            <Typography>Nome: {`${userSelected.nome} ${userSelected.sobrenome}`}</Typography>
+                            <Divider />
+                            <Typography>E-mail: {userSelected.email} </Typography>
+                            <Divider />
+                            <Typography>Gênero: {userSelected.genero === 'female' ? 'feminino' : 'masculino'}</Typography>
+                            <Divider />
+                            <Typography>Nascimento: {userSelected.nascimento}</Typography>
+                            <Divider />
+                            <Typography>Telefone: {userSelected.telefone}</Typography>
+                            <Divider />
+                            <Typography>Nacionalidade: {userSelected.nascionalidade}</Typography>
+                            <Divider />
+                            <Typography>Endereço: </Typography>
+                            <div className={classes.location}>
+                                <Typography>{`Cidade: ${userSelected.cidade} Codigo Postal: ${userSelected.codigoPostal}`}</Typography>
+                                <Typography>{`País: ${userSelected.pais} Estado: ${userSelected.estado}`}</Typography>
+                                <Typography>{`Rua: ${userSelected.ruaNome} Numero: ${userSelected.ruaNumero}`}</Typography>
+                            </div>
+                            <Divider />
+                            <Typography>ID: {userSelected.id}</Typography>
+                            <Divider />
+                            <Typography>URL: { }</Typography>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDialogClose} variant="outline">Ok</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+            <div className={classes.btnStyle}>
+                <Button variant="outlined" onClick={handleClickQuery}>Load</Button>
+            </div>
 
 
         </Container>

@@ -18,6 +18,16 @@ import api from '../../Connections/api';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import LocalConvenienceStore from '@material-ui/icons/LocalConvenienceStore';
 
+export async function reqPacientes(dispatch){
+    await api.get('/api/?results=50')
+    .then((res) => {
+        dispatch(pacientes(res.data))
+    })
+    .catch((err) => {
+        console.log(`Erro: ${err}`)
+    })
+}
+
 export default function Header() {
     const classes = styles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,18 +39,9 @@ export default function Header() {
         setAnchorEl(null);
     };
 
-    async function reqPacientes(){
-        await api.get('/api/?results=50')
-        .then((res) => {
-            dispatch(pacientes(res.data))
-        })
-        .catch((err) => {
-            console.log(`Erro: ${err}`)
-        })
-    }
 
     useEffect(() => {
-        reqPacientes()
+        reqPacientes(dispatch)
     },[])
 
 
